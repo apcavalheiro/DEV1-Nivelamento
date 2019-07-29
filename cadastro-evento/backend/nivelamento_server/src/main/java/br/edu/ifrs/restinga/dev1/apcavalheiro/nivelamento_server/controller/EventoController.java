@@ -44,8 +44,6 @@ public class EventoController {
         this.eventoService.excluirEvento(idEvento);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-
 }
 
 
