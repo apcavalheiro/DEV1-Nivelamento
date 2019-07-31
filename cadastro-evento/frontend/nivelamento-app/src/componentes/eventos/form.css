@@ -3,6 +3,23 @@ table, th, td {
   border: 2px solid #3b3939;
   border-collapse: collapse;
 }
+
+input[type=text]{
+  width: 50%;
+}
+
+input:required{
+  border:1px solid red;
+}
+
+input:valid{
+  border: 1px solid #0bee0b;
+}
+
+input:invalid{
+  border: 1px solid red;
+}
+
 fieldset{
   width: 100%;
   height: 100%;
@@ -14,6 +31,7 @@ th, td {
   align-content: center;
   justify-content: center;   
 }
+
 button{
   margin: 10px;
   background: red;

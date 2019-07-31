@@ -2,17 +2,16 @@ import React, { Component, Fragment } from 'react';
 import './main.css'
 import axios from 'axios'
 import EventosLista from '../eventos/EventosLista';
-import EventosForm from '../eventos/EventosForm';
+import FormEvento from '../eventos/FormEvento';
 
 const initialState = {
-  idEvento: '',
   eventos: [],
   convidadosList: [],
   loading: true,
   evento: '',
   local: '',
   convidado: '',
-  errorMessage: ''
+  lista: [],
 }
 
 const urlBase = "/api/eventos/"
@@ -34,7 +33,8 @@ export default class Main extends Component {
   handleSubmit = e => {
     e.preventDefault()
     let { convidadosList } = this.state
-    const convidados = convidadosList && convidadosList.map((nome) => ({
+    let lista = [...new Set(convidadosList)]
+    const convidados = lista && lista.map((nome) => ({
       nome: nome
     }))
     const evento = {
@@ -45,13 +45,15 @@ export default class Main extends Component {
     this.saveEvent(evento)
   }
 
-  async  saveEvent(evento) {
-     await axios.post(urlBase, evento).then(
+  saveEvent = (evento) => {
+    axios.post(urlBase, evento).then(
+      () => this.handleClear()
+    ).then(
       () => this.listEvents()
-     ).catch(error =>
-       this.setState({ errorMessage: error.response.data.message })
-     )
-   }
+    ).catch(error =>
+      this.setState({ errorMessage: error.response.data.message, erro: true })
+    )
+  }
 
   componentDidMount() {
     this.listEvents()
@@ -61,12 +63,12 @@ export default class Main extends Component {
     axios.delete(urlBase + id).then(
       () => this.listEvents()
     ).catch(error =>
-      this.setState({ errorMessage: error.response.data.message })
+      this.setState({ errorMessage: error.response.data.message, erro: true })
     )
   }
 
   handlePush = () => {
-    const { convidado, convidadosList } = this.state
+    let { convidado, convidadosList } = this.state
     if (convidado === '') return
     convidadosList.push(convidado)
     this.setState({
@@ -83,14 +85,16 @@ export default class Main extends Component {
     this.setState({
       evento: '',
       local: '',
-      convidado: ''
+      convidado: '',
+      convidadosList: []
+
     })
   }
 
   render() {
     const { eventos, loading, evento, convidado, local, convidadosList } = this.state
     return (<Fragment>
-      <EventosForm
+      <FormEvento
         handleClear={this.handleClear}
         handleSubmit={this.handleSubmit}
         handleChange={this.handleChange}
@@ -99,6 +103,7 @@ export default class Main extends Component {
         convidado={convidado}
         convidados={convidadosList}
         local={local}
+        handleBlur={this.handleBlur}
       />
       <EventosLista
         eventos={eventos}
