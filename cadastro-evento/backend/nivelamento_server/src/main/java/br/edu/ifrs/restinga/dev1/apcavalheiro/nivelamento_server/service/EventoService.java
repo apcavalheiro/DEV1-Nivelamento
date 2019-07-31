@@ -1,7 +1,6 @@
 package br.edu.ifrs.restinga.dev1.apcavalheiro.nivelamento_server.service;
 
 import br.edu.ifrs.restinga.dev1.apcavalheiro.nivelamento_server.model.Convidado;
-import br.edu.ifrs.restinga.dev1.apcavalheiro.nivelamento_server.model.Convidados;
 import br.edu.ifrs.restinga.dev1.apcavalheiro.nivelamento_server.model.Evento;
 import br.edu.ifrs.restinga.dev1.apcavalheiro.nivelamento_server.repository.ConvidadoRepository;
 import br.edu.ifrs.restinga.dev1.apcavalheiro.nivelamento_server.repository.EventoRepository;
@@ -10,8 +9,7 @@ import br.edu.ifrs.restinga.dev1.apcavalheiro.nivelamento_server.service.excepti
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EventoService {
@@ -25,15 +23,13 @@ public class EventoService {
     public Evento pesquisarEvento(Integer id) {
         Optional<Evento> evento = this.eventoRepository.findById(id);
         return evento.orElseThrow(() ->
-                new ObjectNotFound("Evento não encontrado! Id: " + id
-                        + ", Tipo: " + Evento.class.getName()));
+                new ObjectNotFound("Evento não encontrado! Id: " + id));
     }
 
     public List<Evento> pesquisarEventos() {
         List<Evento> eventos = this.eventoRepository.findAll();
         if (eventos.isEmpty()) {
-            throw new ObjectNotFound("Nenhum evento cadastrado! Tipo: "
-                    + Evento.class.getName());
+            throw new ObjectNotFound("Nenhum evento cadastrado!");
         }
         return eventos;
     }
@@ -47,52 +43,40 @@ public class EventoService {
         Evento eventoSalvo = null;
         try {
             isEvento(evento);
+            this.convidadoRepository.saveAll(this.isConvidados(evento.getConvidados()));
             eventoSalvo = this.eventoRepository.save(evento);
         } catch (NullPointerException e) {
-            throw new ObjectNotFound("Não é permitido cadastro nulo!" +
-                    " Tipo: " + Evento.class.getName());
+            throw new ObjectNotFound("Não é permitido cadastro nulo!");
         }
-        return evento;
+        return eventoSalvo;
     }
 
     private void isEvento(Evento evento) {
         if (evento.equals("") || evento == null) {
-            throw new ObjectNotFound("Não é permitido cadastro nulo!" +
-                    " Tipo: " + Evento.class.getName());
+            throw new ObjectNotFound("Não é permitido cadastro nulo!");
         }
-        if (evento.getLocal() == null || evento.getLocal().equals("") || evento.getNome().equals("") || evento.getNome() == null) {
-            throw new ObjectNotFound("Todos os campos são obrigatórios!" +
-                    " Tipo: " + Evento.class.getName());
+        if (evento.getLocal() == null || evento.getLocal().equals("") ||
+                evento.getNome().equals("") || evento.getNome() == null) {
+            throw new ObjectNotFound("Todos os campos são obrigatórios!");
         }
     }
 
-    public List<Convidado> cadastrarConvidados(Convidados convidados, Integer idEvento) {
-        Evento evento = this.pesquisarEvento(idEvento);
+    private List<Convidado> isConvidados(List<Convidado> convidados) {
+        Set list = new HashSet<>();
         try {
-            if (convidados.getConvidados().isEmpty()) {
-                throw new ObjectNotFound("Não é permitido lista de convidados vazia!" +
-                        " Tipo: " + Evento.class.getName());
+            convidados.removeIf(c->!list.add(c.getNome()));
+            if (convidados.isEmpty() || convidados == null) {
+                throw new ObjectNotFound("Não é permitido lista de convidados vazia!");
             }
-            for (Convidado convidado : convidados.getConvidados()) {
+            for (Convidado convidado : convidados) {
                 if (convidado.getNome() == "" || convidado.getNome() == null) {
-                    throw new InvalidRequest("Não é permitido cadastrar convidado sem nome! Tipo: "
-                            + Convidado.class.getName());
+                    throw new InvalidRequest("Não é permitido cadastrar convidado sem nome!");
                 }
-                for (Convidado convidadoDb : evento.getConvidados()) {
-                    if (convidadoDb.getNome().equals(convidado.getNome())) {
-                        throw new InvalidRequest("O Convidado: "
-                                + convidado.getNome()
-                                + " já está inscrito neste evento!"
-                                + "Tipo: " + Convidado.class.getName());
-                    }
-                }
-                evento.getConvidados().add(this.convidadoRepository.save(convidado));
             }
-            this.eventoRepository.save(evento);
         } catch (NullPointerException e) {
-            throw new ObjectNotFound("Não é permitido lista de convidados vazia!" +
-                    " Tipo: " + Evento.class.getName());
+            throw new ObjectNotFound("Não é permitido lista de convidados vazia!");
         }
-        return evento.getConvidados();
+
+        return convidados;
     }
 }
