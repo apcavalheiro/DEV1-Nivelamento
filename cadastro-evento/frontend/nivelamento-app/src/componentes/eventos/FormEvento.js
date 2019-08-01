@@ -3,38 +3,34 @@ import './form.css'
 
 export default class FormEvento extends Component {
 
-  deleteEvent(item) {
-    const newState = this.props.convidados
-    if (newState.indexOf(item) > -1) {
-      newState.splice(newState.indexOf(item), 1)
-      this.setState({
-        convidados: newState
-      })
-    }
-  }
-
   render() {
-    let { evento, local, convidado, handleChange, handlePush, handleClear, convidados , handleSubmit} = this.props
+    let { evento, local, convidado, handleChange, deleteItemGuests,
+      handlePush, handleClear, convidados, handleSubmit, erro } = this.props
     let lista = convidados && convidados.map(((nome, index) =>
       <tr key={index}>
         <td>{nome}{' '}
-          <button type="button" onClick={this.deleteEvent.bind(this, nome)} style={{ width: "25px", height: "20px" }}>X</button>
+          <button type="button" onClick={() => deleteItemGuests(nome)}
+            style={{ width: "25px", height: "20px" }}>X</button>
         </td>
       </tr>
     ))
-   
+
     return (<div className="eventosForm">
       <form onSubmit={handleSubmit} >
         <fieldset >
-
           <legend>Cadastro de Evento:</legend>
           <br />
+          {!erro ? '' : <div className="erro">
+            <strong>{erro.message}</strong>
+          </div>}
           <br />
           Evento:<br />
-          <input type="text" name="evento" value={evento || ''} onChange={handleChange} placeholder="evento..." required />
+          <input type="text" name="evento" value={evento || ''}
+            onChange={handleChange} placeholder="Evento..." required />
           <br />
           Local:<br />
-          <input type="text" name="local" value={local || ''} onChange={handleChange} placeholder="local..." required />
+          <input type="text" name="local" value={local || ''}
+            onChange={handleChange} placeholder="Local..." required />
           <br />
           <br />
           <hr />
@@ -52,11 +48,14 @@ export default class FormEvento extends Component {
           <hr />
           <br />
           Nome:<br />
-          <input type="text" name="convidado" value={convidado || ''} onChange={handleChange} placeholder="convidado..." />
-          <input type="button" onClick={handlePush} value="Adicionar" style={{ background: "blue", borderColor: "blue", color: "#fff" }} />
+          <input type="text" name="convidado" value={convidado || ''}
+            onChange={handleChange} placeholder="Convidado..." />
+          <input type="button" onClick={handlePush} value="Adicionar"
+            style={{ background: "blue", borderColor: "blue", color: "#fff" }} />
           <br /><br />
           <input type="button" value="Cancelar" onClick={handleClear} />{' '}
-          <input type="submit" value="Adicionar Evento" style={{ background: "green", borderColor: "green", color: "#fff" }} />
+          <input type="submit" value="Adicionar Evento"
+            style={{ background: "green", borderColor: "green", color: "#fff" }} />
         </fieldset>
       </form>
     </div>)

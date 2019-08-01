@@ -50,9 +50,9 @@ export default class Main extends Component {
       () => this.handleClear()
     ).then(
       () => this.listEvents()
-    ).catch(error =>
-      this.setState({ errorMessage: error.response.data.message, erro: true })
-    )
+    ).catch(error => (
+      this.setState({ erro: error.response.data })
+    ))
   }
 
   componentDidMount() {
@@ -62,9 +62,9 @@ export default class Main extends Component {
   handleDelete = (id) => {
     axios.delete(urlBase + id).then(
       () => this.listEvents()
-    ).catch(error =>
-      this.setState({ errorMessage: error.response.data.message, erro: true })
-    )
+    ).catch(error => (
+      this.setState({ erro: error.response.data })
+    ))
   }
 
   handlePush = () => {
@@ -72,13 +72,15 @@ export default class Main extends Component {
     if (convidado === '') return
     convidadosList.push(convidado)
     this.setState({
-      convidado: ''
+      convidado: '',
+      erro:''
     })
   }
 
   handleChange = event => {
     const { name, value } = event.target
-    this.setState({ [name]: value })
+    this.setState({ [name]: value,
+    erro:'' })
   }
 
   handleClear = () => {
@@ -86,13 +88,24 @@ export default class Main extends Component {
       evento: '',
       local: '',
       convidado: '',
-      convidadosList: []
+      convidadosList: [],
+      erro:''
 
     })
   }
 
+  deleteItemGuests = item => {
+    const newState = this.state.convidadosList
+    if (newState.indexOf(item) > -1) {
+      newState.splice(newState.indexOf(item), 1)
+      this.setState({
+        convidadosList: newState
+      })
+    }
+  }
+
   render() {
-    const { eventos, loading, evento, convidado, local, convidadosList } = this.state
+    const { eventos, loading, evento, convidado, local, convidadosList, erro } = this.state
     return (<Fragment>
       <FormEvento
         handleClear={this.handleClear}
@@ -103,7 +116,8 @@ export default class Main extends Component {
         convidado={convidado}
         convidados={convidadosList}
         local={local}
-        handleBlur={this.handleBlur}
+        erro={erro}
+        deleteItemGuests={this.deleteItemGuests}
       />
       <EventosLista
         eventos={eventos}

@@ -7,16 +7,16 @@ export default class EventosLista extends Component {
     const listaEventos = eventos && eventos.map(e => (
       <tr key={e.id}>
         <td style={{ width: "5%" }}>{e.id}</td>
-        <td >{e.nome}</td>
-        <td >{e.local}</td>
-        <td >{
+        <td style={{ width: "20%" }}>{e.nome}</td>
+        <td style={{ width: "20%" }}>{e.local}</td>
+        <td style={{ width: "40%" }}>{
           e.convidados && e.convidados.map(c => (
             <ul key={c.id}>
               <li style={{ margin: "20px" }}>{c.nome}</li>
             </ul>
           ))
         }</td>
-        <td ><button  onClick={() => this.props.handleDelete(e.id)} >Excluir</button></td>
+        <td style={{ width: "15%" }}><button onClick={() => this.props.handleDelete(e.id)} >Excluir</button></td>
       </tr>
     ))
 
@@ -26,10 +26,10 @@ export default class EventosLista extends Component {
           <thead>
             <tr>
               <th style={{ width: "5%" }} >ID</th>
-              <th >Evento</th>
-              <th >Local</th>
-              <th >Convidados</th>
-              <th ></th>
+              <th style={{ width: "20%" }}>Evento</th>
+              <th style={{ width: "20%" }}>Local</th>
+              <th style={{ width: "40%" }}>Convidados</th>
+              <th style={{ width: "15%" }}></th>
             </tr>
           </thead>
           <tbody>

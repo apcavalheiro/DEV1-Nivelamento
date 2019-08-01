@@ -1,38 +1,55 @@
 table, th, td {
-  width: 30%;
+  width: 100%;
   border: 2px solid #3b3939;
   border-collapse: collapse;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-input[type=text]{
-  width: 50%;
+input[type=text] {
+  width: 60%;
+  height: 40px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-input:required{
-  border:1px solid red;
+input[type=button] {
+  width: 100px;
+  height: 40px;
 }
 
-input:valid{
-  border: 1px solid #0bee0b;
+input[type=submit] {
+  width: 200px;
+  height: 40px;
 }
 
-input:invalid{
-  border: 1px solid red;
+input:required {
+  border: 2px solid red;
 }
 
-fieldset{
+input:valid {
+  border: 2px solid #0bee0b;
+}
+
+input:invalid {
+  border: 2px solid red;
+}
+
+fieldset {
   width: 100%;
   height: 100%;
+  font-size: 30px;
+  font-weight: bold;
 }
 
 th, td {
   padding: 2px;
   text-align: center;
   align-content: center;
-  justify-content: center;   
+  justify-content: center;
 }
 
-button{
+button {
   margin: 10px;
   background: red;
   color: #fff;
@@ -41,3 +58,12 @@ button{
   height: 40px;
 }
 
+.erro {
+  align-content: center;
+  justify-content: center;
+  border: solid 1px red;
+  color: white;
+  font: bold;
+  font-size: 28px;
+  background-color: red;
+}
