@@ -14,7 +14,7 @@ export default class FormEvento extends Component {
   }
 
   render() {
-    let { evento, local, convidado, handleChange, handlePush, handleClear, convidados } = this.props
+    let { evento, local, convidado, handleChange, handlePush, handleClear, convidados , handleSubmit} = this.props
     let lista = convidados && convidados.map(((nome, index) =>
       <tr key={index}>
         <td>{nome}{' '}
@@ -24,7 +24,7 @@ export default class FormEvento extends Component {
     ))
    
     return (<div className="eventosForm">
-      <form onSubmit={this.props.handleSubmit} >
+      <form onSubmit={handleSubmit} >
         <fieldset >
 
           <legend>Cadastro de Evento:</legend>
